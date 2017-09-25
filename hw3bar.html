@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <title>Homework 3</title>
+     <meta charset="utf-8">
+   <script src="files/d3.min.js"></script> 
+      <style>
+        h2 {text-align:center;}
+        .chart rect {
+          fill: steelblue;
+        }
+        .chart text {
+          fill: white;
+          font: 10px sans-serif;
+          text-anchor: end;
+        }
+      </style>
+  </head>
+  <body>
+    <h2>Students in CNIT 132</h2>
+    <svg class="chart"></svg>
+   <script>
+
+    var width = 600,
+    barHeight = 20;
+
+    var x = d3.scaleLinear()
+      .range([0, width]);
+
+    var chart = d3.select(".chart")
+      .attr("width", width);
+
+	  d3.json('hw3data.json', function (data) {
+
+      x.domain([0, d3.max(data, function(d) { return d.students; })]);
+
+      var height = barHeight * data.length;
+      chart.attr("height", height);
+
+      var bar = chart.selectAll("g")
+        .data(data)
+        .enter().append("g")
+        .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+      bar.append("rect")
+        .attr("width", function(d) { return d.students * 5; })
+        .attr("height", barHeight - 1);
+
+      bar.append("text")
+        .attr("x", function(d) { return x(d.students) - 3; })
+        .attr("y", barHeight / 2)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.term; });
+    });
+	  
+   </script>
+  </body>
+</html>
+ 
